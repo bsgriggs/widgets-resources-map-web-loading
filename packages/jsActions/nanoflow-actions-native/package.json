@@ -28,7 +28,7 @@
     "invariant": "^2.2.4",
     "react-native-geocoder": "0.5.0",
     "react-native-geolocation-service": "5.2.0",
-    "react-native-permissions": "^3.3.1"
+    "react-native-permissions": "3.3.1"
   },
   "devDependencies": {
     "@mendix/pluggable-widgets-tools": ">=8.9.2",

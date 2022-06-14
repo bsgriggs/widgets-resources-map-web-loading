@@ -31,6 +31,10 @@ const permissionNameMapping = Object.freeze({
         ios: PERMISSIONS.IOS.CONTACTS,
         android: PERMISSIONS.ANDROID.READ_CONTACTS // check write contact permission
     }),
+    WRITE_CONTACTS: Platform.select({
+        ios: PERMISSIONS.IOS.CONTACTS,
+        android: PERMISSIONS.ANDROID.WRITE_CONTACTS // check write contact permission
+    }),
     FACE_ID: Platform.select({
         ios: PERMISSIONS.IOS.FACE_ID
     }),
@@ -65,6 +69,7 @@ STOREKIT;
  */
 function handleBlockedPermission(): void {
     Alert.alert("title", "need to go to settings for activation", [
+        // draft text
         { text: "go to settings", onPress: () => openSettings() },
         { text: "cancel" }
     ]);
@@ -91,7 +96,7 @@ export async function GenericPermission(
         case RESULTS.LIMITED:
             return permissionStatus;
         case RESULTS.BLOCKED:
-            handleBlockedPermission();
+            handleBlockedPermission(); // check with chris
             return RESULTS.BLOCKED;
         case RESULTS.DENIED:
             return request(mappedPermissionName!);
