@@ -61,7 +61,7 @@ jobs:
                   # https://github.com/actions/toolkit/issues/641#issuecomment-728963957
                   ACTIONS_ALLOW_UNSECURE_COMMANDS: "true"
             - name: "Installing dependencies"
-              run: npm ci --force
+              run: npm ci
             - name: "Set changed packages"
               id: set-changed-packages
               run: node .github/scripts/set-changed-packages.js *-native
