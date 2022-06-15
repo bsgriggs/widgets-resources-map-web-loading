@@ -45,7 +45,7 @@ export default function Maps(props: MapsContainerProps): ReactNode {
                                         longitude: results[0].longitude
                                     });
                                 } else {
-                                    throw new Error(`Unable to search for default address: ${props.address?.value}`);
+                                    console.error(`Unable to search for default address: ${props.address?.value}`);
                                 }
                             }
                         );
