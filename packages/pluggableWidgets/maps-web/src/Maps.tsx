@@ -1,16 +1,14 @@
 import { createElement, ReactNode, useState, useEffect, Fragment } from "react";
 import { MapSwitcher } from "./components/MapSwitcher";
-import Spinner from "./components/Spinner";
 
 import { MapsContainerProps } from "../typings/MapsProps";
 import { useLocationResolver, convertAddressToLatLng, LatLng } from "./utils/geodecode";
 import { getCurrentUserLocation } from "./utils/location";
-import { LazyLoading, Marker } from "../typings/shared";
+import { Marker } from "../typings/shared";
 import { translateZoom } from "./utils/zoom";
 import { ValueStatus } from "mendix";
 import "leaflet/dist/leaflet.css";
 import "./ui/Maps.scss";
-import "./ui/Spinner.scss";
 
 // used if the attributes are set, but their values are empty
 const RotterdamLatlng: LatLng = {
@@ -24,14 +22,6 @@ export default function Maps(props: MapsContainerProps): ReactNode {
     const [defaultLocation, setDefaultLocation] = useState<LatLng>();
     const [locations, setLocations] = useState<Marker[]>([]);
     const [locationsResolved, setLocationsResolved] = useState<boolean>(false);
-
-    const lazyLoading: LazyLoading = {
-        behavior: props.lazyLoadBehavior,
-        spinnerColor: props.spinnerColor?.value || "grey",
-        spinnerSize: props.spinnerSize.value || "5em",
-        spinnerCaption: props.spinnerCaption?.value,
-        spinnerThickness: props.spinnerThickness.value || "0.5em"
-    };
 
     console.debug("Mendix Maps-Web Props: ", props);
 
@@ -121,7 +111,7 @@ export default function Maps(props: MapsContainerProps): ReactNode {
             locationsResolved &&
             defaultLocation !== undefined &&
             props.apiKey?.status === ValueStatus.Available) ||
-        lazyLoading.behavior === "showMap"
+        props.lazyLoadingContent === undefined
     ) {
         console.debug("All states resolved ... showing map: ", {
             currentLocation,
@@ -154,25 +144,17 @@ export default function Maps(props: MapsContainerProps): ReactNode {
                 widthUnit={props.widthUnit}
                 zoomLevel={translateZoom(props.zoom)}
                 defaultLocation={defaultLocation || RotterdamLatlng}
-                lazyLoading={lazyLoading}
             />
         );
     } else {
-        if (lazyLoading.behavior === "spinner") {
-            console.debug("States still resolving ... showing spinner: ", {
+        if (props.lazyLoadingContent !== undefined) {
+            console.debug("States still resolving ... showing lazy loading content: ", {
                 currentLocation,
                 defaultLocation,
                 locations,
                 locationsResolved
             });
-            return (
-                <Spinner
-                    color={lazyLoading.spinnerColor}
-                    size={lazyLoading.spinnerSize}
-                    caption={lazyLoading.spinnerCaption}
-                    thickness={lazyLoading.spinnerThickness}
-                />
-            );
+            return props.lazyLoadingContent;
         } else {
             console.debug("States still resolving ... showing nothing: ", {
                 currentLocation,

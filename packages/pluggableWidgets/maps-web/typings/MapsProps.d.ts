@@ -3,7 +3,7 @@
  * WARNING: All changes made to this file will be overwritten
  * @author Mendix UI Content Team
  */
-import { CSSProperties } from "react";
+import { ComponentType, CSSProperties, ReactNode } from "react";
 import { ActionValue, DynamicValue, ListValue, ListActionValue, ListAttributeValue, WebImage } from "mendix";
 import { Big } from "big.js";
 
@@ -47,8 +47,6 @@ export type HeightUnitEnum = "percentageOfWidth" | "pixels" | "percentageOfParen
 export type ZoomEnum = "automatic" | "world" | "continent" | "city" | "street" | "buildings";
 
 export type MapProviderEnum = "googleMaps" | "openStreet" | "mapBox" | "hereMaps";
-
-export type LazyLoadBehaviorEnum = "spinner" | "showMap" | "nothing";
 
 export interface MarkersPreviewType {
     locationType: LocationTypeEnum;
@@ -103,11 +101,7 @@ export interface MapsContainerProps {
     zoom: ZoomEnum;
     mapProvider: MapProviderEnum;
     mapStyles: string;
-    lazyLoadBehavior: LazyLoadBehaviorEnum;
-    spinnerCaption?: DynamicValue<string>;
-    spinnerColor: DynamicValue<string>;
-    spinnerSize: DynamicValue<string>;
-    spinnerThickness: DynamicValue<string>;
+    lazyLoadingContent?: ReactNode;
 }
 
 export interface MapsPreviewProps {
@@ -140,9 +134,5 @@ export interface MapsPreviewProps {
     zoom: ZoomEnum;
     mapProvider: MapProviderEnum;
     mapStyles: string;
-    lazyLoadBehavior: LazyLoadBehaviorEnum;
-    spinnerCaption: string;
-    spinnerColor: string;
-    spinnerSize: string;
-    spinnerThickness: string;
+    lazyLoadingContent: { widgetCount: number; renderer: ComponentType<{ caption?: string }> };
 }

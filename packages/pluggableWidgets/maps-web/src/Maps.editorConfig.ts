@@ -40,11 +40,6 @@ export function getProperties(
             break;
     }
 
-    //Lazy Load settings
-    if (values.lazyLoadBehavior !== "spinner") {
-        hidePropertiesIn(defaultProperties, values, ["spinnerCaption", "spinnerColor", "spinnerSize"]);
-    }
-
     values.markers.forEach((f, index) => {
         if (f.locationType === "address") {
             hidePropertyIn(defaultProperties, values, "markers", index, "latitude");
@@ -237,10 +232,17 @@ export function getPreview(values: MapsPreviewProps): StructurePreviewProps {
             break;
     }
 
+    // TODO: This needs updated to show the map image and the container to put the Lazy Loading Content
     return {
-        type: "Image",
-        document: decodeURIComponent(image.replace("data:image/svg+xml,", "")),
-        width: 375,
-        height: 375
+        type: "Container",
+        children: [
+            {
+                type: "Image",
+                document: decodeURIComponent(image.replace("data:image/svg+xml,", "")),
+                width: 375,
+                height: 375
+            },
+            { type: "DropZone", property: {} }
+        ]
     };
 }

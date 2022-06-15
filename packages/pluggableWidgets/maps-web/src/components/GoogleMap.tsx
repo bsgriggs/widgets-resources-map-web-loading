@@ -11,7 +11,6 @@ import { getGoogleMapsStyles } from "../utils/google";
 import { translateZoom } from "../utils/zoom";
 import { Option } from "../utils/data";
 import { Alert } from "@mendix/piw-utils-internal/components/web";
-import Spinner from "./Spinner";
 import { getDimensions } from "@mendix/piw-utils-internal";
 
 export interface GoogleMapsProps extends SharedProps {
@@ -120,13 +119,6 @@ export function GoogleMap(props: GoogleMapsProps): ReactElement {
                                 />
                             ))}
                     </GoogleMapComponent>
-                ) : props.lazyLoading.behavior === "spinner" ? (
-                    <Spinner
-                        color={props.lazyLoading.spinnerColor}
-                        size={props.lazyLoading.spinnerSize}
-                        thickness={props.lazyLoading.spinnerThickness}
-                        caption={props.lazyLoading.spinnerCaption}
-                    />
                 ) : (
                     <Fragment />
                 )}

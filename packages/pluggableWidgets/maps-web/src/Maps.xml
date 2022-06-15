@@ -257,27 +257,30 @@
             </propertyGroup>
         </propertyGroup>
         <propertyGroup caption="Advanced">
-            <propertyGroup caption="General">
-                <property key="mapProvider" type="enumeration" defaultValue="googleMaps">
-                    <caption>Map provider</caption>
-                    <description />
-                    <enumerationValues>
-                        <enumerationValue key="googleMaps">Google Maps</enumerationValue>
-                        <enumerationValue key="openStreet">Open street</enumerationValue>
-                        <enumerationValue key="mapBox">Map box</enumerationValue>
-                        <enumerationValue key="hereMaps">Here Maps</enumerationValue>
-                    </enumerationValues>
-                </property>
-                <property key="mapStyles" type="string" multiline="true" required="false">
-                    <caption>Map styles</caption>
-                    <description>JSON array with Google Maps styles.</description>
-                </property>
-                <!-- <property key="debugMode" type="boolean" defaultValue="false">
+            <property key="mapProvider" type="enumeration" defaultValue="googleMaps">
+                <caption>Map provider</caption>
+                <description />
+                <enumerationValues>
+                    <enumerationValue key="googleMaps">Google Maps</enumerationValue>
+                    <enumerationValue key="openStreet">Open street</enumerationValue>
+                    <enumerationValue key="mapBox">Map box</enumerationValue>
+                    <enumerationValue key="hereMaps">Here Maps</enumerationValue>
+                </enumerationValues>
+            </property>
+            <property key="mapStyles" type="string" multiline="true" required="false">
+                <caption>Map styles</caption>
+                <description>JSON array with Google Maps styles.</description>
+            </property>
+            <!-- <property key="debugMode" type="boolean" defaultValue="false">
                     <caption>Debug Mode</caption>
                     <description>Logs messages to the browser console. DISABLE prior to deployments.</description>
                 </property> -->
-            </propertyGroup>
-            <propertyGroup caption="Lazy Loading">
+            <property key="lazyLoadingContent" type="widgets" required="false">
+                <caption>Lazy Loading Content</caption>
+                <description>Content to display in place of the map while the map is still loading</description>
+            </property>
+        </propertyGroup>
+        <!-- <propertyGroup caption="Lazy Loading">
                 <property key="lazyLoadBehavior" type="enumeration" defaultValue="spinner">
                     <caption>Lazy Load Behavior</caption>
                     <description>What should be displayed while the map is loading?</description>
@@ -308,6 +311,6 @@
                     <returnType type="String" />
                 </property>
             </propertyGroup>
-        </propertyGroup>
+        </propertyGroup> -->
     </properties>
 </widget>
