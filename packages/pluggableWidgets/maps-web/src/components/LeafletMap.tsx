@@ -31,7 +31,7 @@ const defaultMarkerIcon = new LeafletIcon({
 
 export function LeafletMap(props: LeafletProps): ReactElement {
     const [map, setMap] = useState<Map | undefined>();
-    const center = { lat: 51.906688, lng: 4.48837 };
+    const center = { lat: props.defaultLocation.latitude, lng: props.defaultLocation.longitude };
     const {
         autoZoom,
         attributionControl,

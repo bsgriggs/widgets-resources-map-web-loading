@@ -1,0 +1,26 @@
+@keyframes spinner {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.web-spinner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    .spinner {
+        .sub-spinner {
+            content: " ";
+            display: block;
+            border-radius: 50%;
+            animation: spinner 1.2s linear infinite;
+        }
+    }
+    .mx-text {
+        margin-top: 8px;
+    }
+}

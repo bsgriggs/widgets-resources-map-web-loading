@@ -38,6 +38,8 @@ export interface DynamicMarkersType {
     customMarkerDynamic?: DynamicValue<WebImage>;
 }
 
+export type LocationTypeEnum = "address" | "latlng";
+
 export type WidthUnitEnum = "percentage" | "pixels";
 
 export type HeightUnitEnum = "percentageOfWidth" | "pixels" | "percentageOfParent";
@@ -45,6 +47,8 @@ export type HeightUnitEnum = "percentageOfWidth" | "pixels" | "percentageOfParen
 export type ZoomEnum = "automatic" | "world" | "continent" | "city" | "street" | "buildings";
 
 export type MapProviderEnum = "googleMaps" | "openStreet" | "mapBox" | "hereMaps";
+
+export type LazyLoadBehaviorEnum = "spinner" | "showMap" | "nothing";
 
 export interface MarkersPreviewType {
     locationType: LocationTypeEnum;
@@ -77,11 +81,13 @@ export interface MapsContainerProps {
     advanced: boolean;
     markers: MarkersType[];
     dynamicMarkers: DynamicMarkersType[];
-    apiKey: string;
-    apiKeyExp?: DynamicValue<string>;
-    geodecodeApiKey: string;
-    geodecodeApiKeyExp?: DynamicValue<string>;
+    apiKey?: DynamicValue<string>;
+    geodecodeApiKey?: DynamicValue<string>;
     showCurrentLocation: boolean;
+    locationType: LocationTypeEnum;
+    address?: DynamicValue<string>;
+    latitude?: DynamicValue<string>;
+    longitude?: DynamicValue<string>;
     optionDrag: boolean;
     optionScroll: boolean;
     optionZoomControl: boolean;
@@ -97,6 +103,12 @@ export interface MapsContainerProps {
     zoom: ZoomEnum;
     mapProvider: MapProviderEnum;
     mapStyles: string;
+    debugMode: boolean;
+    lazyLoadBehavior: LazyLoadBehaviorEnum;
+    spinnerCaption?: DynamicValue<string>;
+    spinnerColor: DynamicValue<string>;
+    spinnerSize: DynamicValue<string>;
+    spinnerThickness: DynamicValue<string>;
 }
 
 export interface MapsPreviewProps {
@@ -108,10 +120,12 @@ export interface MapsPreviewProps {
     markers: MarkersPreviewType[];
     dynamicMarkers: DynamicMarkersPreviewType[];
     apiKey: string;
-    apiKeyExp: string;
     geodecodeApiKey: string;
-    geodecodeApiKeyExp: string;
     showCurrentLocation: boolean;
+    locationType: LocationTypeEnum;
+    address: string;
+    latitude: string;
+    longitude: string;
     optionDrag: boolean;
     optionScroll: boolean;
     optionZoomControl: boolean;
@@ -127,4 +141,10 @@ export interface MapsPreviewProps {
     zoom: ZoomEnum;
     mapProvider: MapProviderEnum;
     mapStyles: string;
+    debugMode: boolean;
+    lazyLoadBehavior: LazyLoadBehaviorEnum;
+    spinnerCaption: string;
+    spinnerColor: string;
+    spinnerSize: string;
+    spinnerThickness: string;
 }

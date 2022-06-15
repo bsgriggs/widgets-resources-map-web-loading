@@ -1,4 +1,4 @@
-import { createElement, Dispatch, ReactElement, SetStateAction, useEffect, useRef, useState } from "react";
+import { createElement, Dispatch, ReactElement, SetStateAction, useEffect, useRef, useState, Fragment } from "react";
 import classNames from "classnames";
 import {
     GoogleMap as GoogleMapComponent,
@@ -11,6 +11,7 @@ import { getGoogleMapsStyles } from "../utils/google";
 import { translateZoom } from "../utils/zoom";
 import { Option } from "../utils/data";
 import { Alert } from "@mendix/piw-utils-internal/components/web";
+import Spinner from "./Spinner";
 import { getDimensions } from "@mendix/piw-utils-internal";
 
 export interface GoogleMapsProps extends SharedProps {
@@ -24,8 +25,8 @@ export interface GoogleMapsProps extends SharedProps {
 export function GoogleMap(props: GoogleMapsProps): ReactElement {
     const [map, setMap] = useState<google.maps.Map | undefined>();
     const center = useRef<google.maps.LatLngLiteral>({
-        lat: 51.906688,
-        lng: 4.48837
+        lat: props.defaultLocation.latitude,
+        lng: props.defaultLocation.longitude
     });
     const [selectedMarker, setSelectedMarker] = useState<Option<Marker>>();
     const [error, setError] = useState("");
@@ -119,8 +120,15 @@ export function GoogleMap(props: GoogleMapsProps): ReactElement {
                                 />
                             ))}
                     </GoogleMapComponent>
+                ) : props.lazyLoading.behavior === "spinner" ? (
+                    <Spinner
+                        color={props.lazyLoading.spinnerColor}
+                        size={props.lazyLoading.spinnerSize}
+                        thickness={props.lazyLoading.spinnerThickness}
+                        caption={props.lazyLoading.spinnerCaption}
+                    />
                 ) : (
-                    <div className="spinner" />
+                    <Fragment />
                 )}
             </div>
         </div>
@@ -153,16 +161,18 @@ function GoogleMapsMarker({
             }
             icon={marker.url}
         >
-            {selectedMarker === marker && markerRef.current && (
-                <InfoWindow
-                    anchor={markerRef.current}
-                    onCloseClick={() => setSelectedMarker(prev => (prev === marker ? undefined : prev))}
-                >
-                    <span style={{ cursor: marker.onClick ? "pointer" : "none" }} onClick={marker.onClick}>
-                        {marker.title}
-                    </span>
-                </InfoWindow>
-            )}
+            <Fragment>
+                {selectedMarker === marker && markerRef.current && (
+                    <InfoWindow
+                        anchor={markerRef.current}
+                        onCloseClick={() => setSelectedMarker(prev => (prev === marker ? undefined : prev))}
+                    >
+                        <span style={{ cursor: marker.onClick ? "pointer" : "none" }} onClick={marker.onClick}>
+                            {marker.title}
+                        </span>
+                    </InfoWindow>
+                )}
+            </Fragment>
         </MarkerComponent>
     );
 }

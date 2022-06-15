@@ -20,7 +20,17 @@ describe("Leaflet maps", () => {
         style: {},
         width: 50,
         widthUnit: "percentage",
-        zoomLevel: 10
+        zoomLevel: 10,
+        defaultLocation: {
+            latitude: 51.906688,
+            longitude: 4.48837
+        },
+        lazyLoading: {
+            behavior: "spinner",
+            spinnerColor: "grey",
+            spinnerSize: "5em",
+            spinnerCaption: "test"
+        }
     };
 
     const renderLeafletMap = (props: LeafletProps): ShallowWrapper<LeafletProps, any> =>

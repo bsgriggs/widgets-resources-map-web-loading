@@ -1,5 +1,6 @@
 import { Dimensions } from "@mendix/piw-utils-internal";
 import { CSSProperties } from "react";
+import { LatLng } from "../src/utils/geodecode";
 export interface ModeledMarker {
     address?: string;
     latitude?: number;
@@ -17,6 +18,14 @@ export interface Marker {
     title?: string;
 }
 
+export interface LazyLoading {
+    behavior: LazyLoadBehaviorEnum;
+    spinnerCaption?: string;
+    spinnerColor: string;
+    spinnerSize: string;
+    spinnerThickness: string;
+}
+
 export interface SharedProps extends Dimensions {
     autoZoom: boolean;
     optionZoomControl: boolean;
@@ -26,6 +35,8 @@ export interface SharedProps extends Dimensions {
     showCurrentLocation: boolean;
     currentLocation?: Marker;
     locations: Marker[];
+    defaultLocation: LatLng;
+    lazyLoading: LazyLoading;
     mapsToken?: string;
     className?: string;
     style?: CSSProperties;

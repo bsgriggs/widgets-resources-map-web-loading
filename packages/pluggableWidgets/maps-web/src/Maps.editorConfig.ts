@@ -19,36 +19,30 @@ export function getProperties(
 ): Properties {
     const containsAddress =
         values.markers.some(marker => marker.locationType === "address") ||
-        values.dynamicMarkers.some(marker => marker.locationType === "address");
+        values.dynamicMarkers.some(marker => marker.locationType === "address") ||
+        values.locationType === "address";
 
     if (platform === "desktop") {
-        if (values.apiKey) {
-            hidePropertyIn(defaultProperties, values, "apiKeyExp");
-        } else {
-            hidePropertyIn(defaultProperties, values, "apiKey");
-        }
-        if (values.geodecodeApiKey) {
-            hidePropertyIn(defaultProperties, values, "geodecodeApiKeyExp");
-        } else {
-            hidePropertyIn(defaultProperties, values, "geodecodeApiKey");
-        }
-
         hidePropertyIn(defaultProperties, values, "advanced");
     } else {
-        if (values.apiKeyExp) {
-            hidePropertyIn(defaultProperties, values, "apiKey");
-        } else {
-            hidePropertyIn(defaultProperties, values, "apiKeyExp");
-        }
-        if (values.geodecodeApiKeyExp) {
-            hidePropertyIn(defaultProperties, values, "geodecodeApiKey");
-        } else {
-            hidePropertyIn(defaultProperties, values, "geodecodeApiKeyExp");
-        }
-
         if (!values.advanced) {
             hidePropertiesIn(defaultProperties, values, ["mapProvider", "mapStyles"]);
         }
+    }
+
+    //adjust default location settings
+    switch (values.locationType) {
+        case "address":
+            hidePropertiesIn(defaultProperties, values, ["latitude", "longitude"]);
+            break;
+        case "latlng":
+            hidePropertiesIn(defaultProperties, values, ["address"]);
+            break;
+    }
+
+    //Lazy Load settings
+    if (values.lazyLoadBehavior !== "spinner") {
+        hidePropertiesIn(defaultProperties, values, ["spinnerCaption", "spinnerColor", "spinnerSize"]);
     }
 
     values.markers.forEach((f, index) => {
@@ -92,14 +86,14 @@ export function getProperties(
             "mapStyles"
         ]);
         if (values.mapProvider === "openStreet") {
-            hidePropertiesIn(defaultProperties, values, ["apiKeyExp", "apiKey"]);
+            hidePropertiesIn(defaultProperties, values, ["apiKey"]);
         }
     } else {
         hidePropertyIn(defaultProperties, values, "attributionControl");
     }
 
     if (!containsAddress) {
-        hidePropertiesIn(defaultProperties, values, ["geodecodeApiKey", "geodecodeApiKeyExp"]);
+        hidePropertiesIn(defaultProperties, values, ["geodecodeApiKey"]);
     }
 
     return defaultProperties;
@@ -111,7 +105,7 @@ export function check(values: MapsPreviewProps): Problem[] {
         values.markers.some(marker => marker.locationType === "address") ||
         values.dynamicMarkers.some(marker => marker.locationType === "address");
 
-    if (values.mapProvider !== "openStreet" && !values.apiKey && !values.apiKeyExp) {
+    if (values.mapProvider !== "openStreet" && !values.apiKey) {
         errors.push({
             property: "apiKey",
             message: "To avoid errors during map rendering it's necessary to include an Api Key",
@@ -119,7 +113,7 @@ export function check(values: MapsPreviewProps): Problem[] {
         });
     }
 
-    if (containsAddress && !values.geodecodeApiKeyExp && !values.geodecodeApiKey) {
+    if (containsAddress && !values.geodecodeApiKey) {
         errors.push({
             property: "geodecodeApiKey",
             message: "To translate addresses to latitude and longitude a Geo Location API key is required",
@@ -127,6 +121,7 @@ export function check(values: MapsPreviewProps): Problem[] {
         });
     }
 
+    // validate markers
     values.markers.forEach((marker, index) => {
         if (marker.locationType === "address") {
             if (!marker.address) {
@@ -193,6 +188,32 @@ export function check(values: MapsPreviewProps): Problem[] {
             });
         }
     });
+
+    //adjust default location settings
+    switch (values.locationType) {
+        case "address":
+            if (!values.address) {
+                errors.push({
+                    property: "address",
+                    message: "A default address is required"
+                });
+            }
+            break;
+        case "latlng":
+            if (!values.latitude) {
+                errors.push({
+                    property: "latitude",
+                    message: "A default latitude is required"
+                });
+            }
+            if (!values.longitude) {
+                errors.push({
+                    property: "longitude",
+                    message: "A default longitude is required"
+                });
+            }
+            break;
+    }
 
     return errors;
 }
