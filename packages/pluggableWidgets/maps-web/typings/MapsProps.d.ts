@@ -103,7 +103,6 @@ export interface MapsContainerProps {
     zoom: ZoomEnum;
     mapProvider: MapProviderEnum;
     mapStyles: string;
-    debugMode: boolean;
     lazyLoadBehavior: LazyLoadBehaviorEnum;
     spinnerCaption?: DynamicValue<string>;
     spinnerColor: DynamicValue<string>;
@@ -141,7 +140,6 @@ export interface MapsPreviewProps {
     zoom: ZoomEnum;
     mapProvider: MapProviderEnum;
     mapStyles: string;
-    debugMode: boolean;
     lazyLoadBehavior: LazyLoadBehaviorEnum;
     spinnerCaption: string;
     spinnerColor: string;

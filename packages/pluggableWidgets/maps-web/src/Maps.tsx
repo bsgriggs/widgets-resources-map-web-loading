@@ -25,7 +25,6 @@ export default function Maps(props: MapsContainerProps): ReactNode {
     const [locations, setLocations] = useState<Marker[]>([]);
     const [locationsResolved, setLocationsResolved] = useState<boolean>(false);
 
-    const debug = props.debugMode;
     const lazyLoading: LazyLoading = {
         behavior: props.lazyLoadBehavior,
         spinnerColor: props.spinnerColor?.value || "grey",
@@ -34,7 +33,7 @@ export default function Maps(props: MapsContainerProps): ReactNode {
         spinnerThickness: props.spinnerThickness.value || "0.5em"
     };
 
-    debug && console.log("Mendix Props: ", props);
+    console.debug("Mendix Maps-Web Props: ", props);
 
     useEffect(() => {
         // resolve default location
@@ -46,16 +45,15 @@ export default function Maps(props: MapsContainerProps): ReactNode {
             switch (props.locationType) {
                 case "address":
                     if (props.address.value.trim() !== "") {
-                        debug && console.log("Started resolving default address");
+                        console.debug("Started resolving default address");
                         convertAddressToLatLng([{ address: props.address.value }], props.geodecodeApiKey?.value).then(
                             (results: Marker[]) => {
                                 if (results.length > 0) {
                                     setDefaultLocation(results[0]);
-                                    debug &&
-                                        console.log("Default address resolved as latitude and longitude: ", {
-                                            latitude: results[0].latitude,
-                                            longitude: results[0].longitude
-                                        });
+                                    console.debug("Default address resolved as latitude and longitude: ", {
+                                        latitude: results[0].latitude,
+                                        longitude: results[0].longitude
+                                    });
                                 } else {
                                     throw new Error(`Unable to search for default address: ${props.address?.value}`);
                                 }
@@ -63,24 +61,23 @@ export default function Maps(props: MapsContainerProps): ReactNode {
                         );
                     } else {
                         setDefaultLocation(RotterdamLatlng);
-                        debug && console.log("Default address is empty ... resolving as Rotterdam");
+                        console.debug("Default address is empty ... resolving as Rotterdam");
                     }
                     break;
                 case "latlng":
-                    debug && console.log("Started resolving default latitude and longitude");
+                    console.debug("Started resolving default latitude and longitude");
                     if (props.latitude.value.trim() !== "" && props.longitude.value.trim() !== "") {
                         setDefaultLocation({
                             latitude: Number(props.latitude.value),
                             longitude: Number(props.longitude.value)
                         });
-                        debug &&
-                            console.log("Default address resolved as latitude and longitude: ", {
-                                latitude: Number(props.latitude.value),
-                                longitude: Number(props.longitude.value)
-                            });
+                        console.debug("Default address resolved as latitude and longitude: ", {
+                            latitude: Number(props.latitude.value),
+                            longitude: Number(props.longitude.value)
+                        });
                     } else {
                         setDefaultLocation(RotterdamLatlng);
-                        debug && console.log("Default latitude and/or longitude are empty ... resolving as Rotterdam");
+                        console.debug("Default latitude and/or longitude are empty ... resolving as Rotterdam");
                     }
                     break;
             }
@@ -88,16 +85,16 @@ export default function Maps(props: MapsContainerProps): ReactNode {
 
         // resolve current location if enabled
         if (props.showCurrentLocation) {
-            debug && console.log("Started resolving current location");
+            console.debug("Started resolving current location");
             getCurrentUserLocation()
                 .then((currentLocation: Marker) => {
                     setCurrentLocation(currentLocation);
-                    debug && console.log("Current location resolved: ", currentLocation);
+                    console.debug("Current location resolved: ", currentLocation);
                 })
                 .catch(e => console.error(e));
         } else {
             setCurrentLocation(undefined);
-            debug && console.log("Show current location disabled ... skipping");
+            console.debug("Show current location disabled ... skipping");
         }
 
         // resolve marker lists
@@ -105,16 +102,15 @@ export default function Maps(props: MapsContainerProps): ReactNode {
             props.dynamicMarkers === [] ||
             props.dynamicMarkers.every(dynamicMarker => dynamicMarker.markersDS?.status === ValueStatus.Available)
         ) {
-            debug &&
-                console.log("Started resolving markers ...", {
-                    staticMarkers: props.markers,
-                    dynamicMarkers: props.dynamicMarkers
-                });
+            console.debug("Started resolving markers ...", {
+                staticMarkers: props.markers,
+                dynamicMarkers: props.dynamicMarkers
+            });
             useLocationResolver(props.markers, props.dynamicMarkers, props.geodecodeApiKey?.value).then(
                 (locations: Marker[]) => {
                     setLocations(locations);
                     setLocationsResolved(true);
-                    debug && console.log("Markers resolved: ", locations);
+                    console.debug("Markers resolved: ", locations);
                 }
             );
         }
@@ -127,13 +123,12 @@ export default function Maps(props: MapsContainerProps): ReactNode {
             props.apiKey?.status === ValueStatus.Available) ||
         lazyLoading.behavior === "showMap"
     ) {
-        debug &&
-            console.log("All states resolved ... showing map: ", {
-                currentLocation,
-                defaultLocation,
-                locations,
-                locationsResolved
-            });
+        console.debug("All states resolved ... showing map: ", {
+            currentLocation,
+            defaultLocation,
+            locations,
+            locationsResolved
+        });
         return (
             <MapSwitcher
                 attributionControl={props.attributionControl}
@@ -164,13 +159,12 @@ export default function Maps(props: MapsContainerProps): ReactNode {
         );
     } else {
         if (lazyLoading.behavior === "spinner") {
-            debug &&
-                console.log("States still resolving ... showing spinner: ", {
-                    currentLocation,
-                    defaultLocation,
-                    locations,
-                    locationsResolved
-                });
+            console.debug("States still resolving ... showing spinner: ", {
+                currentLocation,
+                defaultLocation,
+                locations,
+                locationsResolved
+            });
             return (
                 <Spinner
                     color={lazyLoading.spinnerColor}
@@ -180,13 +174,12 @@ export default function Maps(props: MapsContainerProps): ReactNode {
                 />
             );
         } else {
-            debug &&
-                console.log("States still resolving ... showing nothing: ", {
-                    currentLocation,
-                    defaultLocation,
-                    locations,
-                    locationsResolved
-                });
+            console.debug("States still resolving ... showing nothing: ", {
+                currentLocation,
+                defaultLocation,
+                locations,
+                locationsResolved
+            });
             return <Fragment />;
         }
     }

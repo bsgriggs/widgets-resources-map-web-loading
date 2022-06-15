@@ -272,10 +272,10 @@
                     <caption>Map styles</caption>
                     <description>JSON array with Google Maps styles.</description>
                 </property>
-                <property key="debugMode" type="boolean" defaultValue="false">
+                <!-- <property key="debugMode" type="boolean" defaultValue="false">
                     <caption>Debug Mode</caption>
                     <description>Logs messages to the browser console. DISABLE prior to deployments.</description>
-                </property>
+                </property> -->
             </propertyGroup>
             <propertyGroup caption="Lazy Loading">
                 <property key="lazyLoadBehavior" type="enumeration" defaultValue="spinner">
