@@ -81,15 +81,15 @@ jobs:
                   CHANGED_PACKAGES: ${{ steps.set-changed-packages.outputs.CHANGED_PACKAGES }}
                   CHANGED_PACKAGES_FORMATTED_FOR_LERNA: ${{ steps.set-changed-packages.outputs.CHANGED_PACKAGES_FORMATTED_FOR_LERNA }}
                   CI: true
-            - name: "Android Emulator"
-              timeout-minutes: 10
-              continue-on-error: true
-              run: |
-                echo "Starting emulator"
-                nohup $ANDROID_HOME/emulator/emulator -avd NATIVE_pixel_30 -no-audio -no-snapshot -no-window -skin 1080x1920 &
-                $ANDROID_HOME/platform-tools/adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed | tr -d '\r') ]]; do sleep 1; done; input keyevent 82'
-                $ANDROID_HOME/platform-tools/adb devices
-                echo "Emulator started"
+            # - name: "Android Emulator"
+            #   timeout-minutes: 10
+            #   continue-on-error: true
+            #   run: |
+            #     echo "Starting emulator"
+            #     nohup $ANDROID_HOME/emulator/emulator -avd NATIVE_pixel_30 -no-audio -no-snapshot -no-window -skin 1080x1920 &
+            #     $ANDROID_HOME/platform-tools/adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed | tr -d '\r') ]]; do sleep 1; done; input keyevent 82'
+            #     $ANDROID_HOME/platform-tools/adb devices
+            #     echo "Emulator started"
             - name: "Run e2e tests"
               run: npx lerna run test:e2e:local:android --stream --concurrency 1 --scope "${{ steps.set-changed-packages.outputs.CHANGED_PACKAGES_FORMATTED_FOR_LERNA }}"
             - name: "Archive test screenshot diff results"
@@ -98,5 +98,6 @@ jobs:
               with:
                   name: test-screenshot-results
                   path: |
-                      ${{ github.workspace }}/packages/**/e2e/images/**/*.png
-                  if-no-files-found: error
+                      ${{ github.workspace }}/packages/**/e2e/images/diffs/**/*.png
+                      ${{ github.workspace }}/packages/**/e2e/images/actual/**/*.png
+                  if-no-files-found: continue
