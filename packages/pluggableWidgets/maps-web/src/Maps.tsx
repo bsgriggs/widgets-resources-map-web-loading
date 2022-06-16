@@ -23,7 +23,7 @@ export default function Maps(props: MapsContainerProps): ReactNode {
     const [locations, setLocations] = useState<Marker[]>([]);
     const [locationsResolved, setLocationsResolved] = useState<boolean>(false);
 
-    console.debug("Mendix Maps-Web Props: ", props);
+    console.debug("Mendix Maps-Web - Props: ", props);
 
     useEffect(() => {
         // resolve default location
@@ -35,39 +35,46 @@ export default function Maps(props: MapsContainerProps): ReactNode {
             switch (props.locationType) {
                 case "address":
                     if (props.address.value.trim() !== "") {
-                        console.debug("Started resolving default address");
+                        console.debug("Mendix Maps-Web - Started resolving default address");
                         convertAddressToLatLng([{ address: props.address.value }], props.geodecodeApiKey?.value).then(
                             (results: Marker[]) => {
                                 if (results.length > 0) {
                                     setDefaultLocation(results[0]);
-                                    console.debug("Default address resolved as latitude and longitude: ", {
-                                        latitude: results[0].latitude,
-                                        longitude: results[0].longitude
-                                    });
+                                    console.debug(
+                                        "Mendix Maps-Web - Default address resolved as latitude and longitude: ",
+                                        {
+                                            latitude: results[0].latitude,
+                                            longitude: results[0].longitude
+                                        }
+                                    );
                                 } else {
-                                    console.error(`Unable to search for default address: ${props.address?.value}`);
+                                    console.error(
+                                        `Mendix Maps-Web - Unable to search for default address: ${props.address?.value}`
+                                    );
                                 }
                             }
                         );
                     } else {
                         setDefaultLocation(RotterdamLatlng);
-                        console.debug("Default address is empty ... resolving as Rotterdam");
+                        console.debug("Mendix Maps-Web - Default address is empty ... resolving as Rotterdam");
                     }
                     break;
                 case "latlng":
-                    console.debug("Started resolving default latitude and longitude");
+                    console.debug("Mendix Maps-Web - Started resolving default latitude and longitude");
                     if (props.latitude.value.trim() !== "" && props.longitude.value.trim() !== "") {
                         setDefaultLocation({
                             latitude: Number(props.latitude.value),
                             longitude: Number(props.longitude.value)
                         });
-                        console.debug("Default address resolved as latitude and longitude: ", {
+                        console.debug("Mendix Maps-Web - Default address resolved as latitude and longitude: ", {
                             latitude: Number(props.latitude.value),
                             longitude: Number(props.longitude.value)
                         });
                     } else {
                         setDefaultLocation(RotterdamLatlng);
-                        console.debug("Default latitude and/or longitude are empty ... resolving as Rotterdam");
+                        console.debug(
+                            "Mendix Maps-Web - Default latitude and/or longitude are empty ... resolving as Rotterdam"
+                        );
                     }
                     break;
             }
@@ -75,7 +82,7 @@ export default function Maps(props: MapsContainerProps): ReactNode {
 
         // resolve current location if enabled
         if (props.showCurrentLocation) {
-            console.debug("Started resolving current location");
+            console.debug("Mendix Maps-Web - Started resolving current location");
             getCurrentUserLocation()
                 .then((currentLocation: Marker) => {
                     setCurrentLocation(currentLocation);
@@ -84,7 +91,7 @@ export default function Maps(props: MapsContainerProps): ReactNode {
                 .catch(e => console.error(e));
         } else {
             setCurrentLocation(undefined);
-            console.debug("Show current location disabled ... skipping");
+            console.debug("Mendix Maps-Web - Show current location disabled ... skipping");
         }
 
         // resolve marker lists
@@ -92,7 +99,7 @@ export default function Maps(props: MapsContainerProps): ReactNode {
             props.dynamicMarkers === [] ||
             props.dynamicMarkers.every(dynamicMarker => dynamicMarker.markersDS?.status === ValueStatus.Available)
         ) {
-            console.debug("Started resolving markers ...", {
+            console.debug("Mendix Maps-Web - Started resolving markers ...", {
                 staticMarkers: props.markers,
                 dynamicMarkers: props.dynamicMarkers
             });
@@ -100,7 +107,7 @@ export default function Maps(props: MapsContainerProps): ReactNode {
                 (locations: Marker[]) => {
                     setLocations(locations);
                     setLocationsResolved(true);
-                    console.debug("Markers resolved: ", locations);
+                    console.debug("Mendix Maps-Web - Markers resolved: ", locations);
                 }
             );
         }
@@ -111,14 +118,21 @@ export default function Maps(props: MapsContainerProps): ReactNode {
             locationsResolved &&
             defaultLocation !== undefined &&
             props.apiKey?.status === ValueStatus.Available) ||
-        props.lazyLoadingContent === undefined
+        (props.lazyLoadingContent === undefined && defaultLocation !== undefined)
     ) {
-        console.debug("All states resolved ... showing map: ", {
-            currentLocation,
-            defaultLocation,
-            locations,
-            locationsResolved
-        });
+        props.lazyLoadingContent === undefined
+            ? console.debug("Mendix Maps-Web - No lazy loading content set ... showing map: ", {
+                  currentLocation,
+                  defaultLocation,
+                  locations,
+                  locationsResolved
+              })
+            : console.debug("Mendix Maps-Web - All states resolved ... showing map: ", {
+                  currentLocation,
+                  defaultLocation,
+                  locations,
+                  locationsResolved
+              });
         return (
             <MapSwitcher
                 attributionControl={props.attributionControl}
@@ -143,12 +157,12 @@ export default function Maps(props: MapsContainerProps): ReactNode {
                 width={props.width}
                 widthUnit={props.widthUnit}
                 zoomLevel={translateZoom(props.zoom)}
-                defaultLocation={defaultLocation || RotterdamLatlng}
+                defaultLocation={defaultLocation}
             />
         );
     } else {
         if (props.lazyLoadingContent !== undefined) {
-            console.debug("States still resolving ... showing lazy loading content: ", {
+            console.debug("Mendix Maps-Web - States still resolving ... showing lazy loading content: ", {
                 currentLocation,
                 defaultLocation,
                 locations,
@@ -156,7 +170,7 @@ export default function Maps(props: MapsContainerProps): ReactNode {
             });
             return props.lazyLoadingContent;
         } else {
-            console.debug("States still resolving ... showing nothing: ", {
+            console.debug("Mendix Maps-Web - States still resolving ... showing nothing: ", {
                 currentLocation,
                 defaultLocation,
                 locations,

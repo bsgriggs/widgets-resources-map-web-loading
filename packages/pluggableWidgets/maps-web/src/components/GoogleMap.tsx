@@ -47,6 +47,8 @@ export function GoogleMap(props: GoogleMapsProps): ReactElement {
         zoomLevel
     } = props;
 
+    console.debug("Mendix Maps-Web - Google Maps Props", props);
+
     useEffect(() => {
         if (map) {
             const bounds = new google.maps.LatLngBounds();
@@ -67,6 +69,7 @@ export function GoogleMap(props: GoogleMapsProps): ReactElement {
             } else {
                 map.setCenter(bounds.getCenter());
             }
+            console.debug("Mendix Maps-Web - Google Maps Bounds", bounds);
         }
     }, [map, locations, currentLocation, autoZoom]);
 
